@@ -1,8 +1,8 @@
 //
 //  netapi.h
-//  hltv-odds-simulator
+//  hltv-match-analysis
 //
-//  Created by Noah Wooten on 12/12/23.
+//  Created by Noah Wooten on 12/14/23.
 //
 
 #include <stdio.h>

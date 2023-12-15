@@ -49,11 +49,12 @@ int main(int argc, char** argv) {
         printf("Would you like to filter by Match Type? [Y/N]: ");
         InputBuffer3 = fgetc(stdin);
         if ((InputBuffer3 & ~0x20) == 'Y') {
-            printf("Please select a match type: ");
+            printf("Please select a match type: \n");
             printf("1. Majors\n");
             printf("2. Big Events\n");
             printf("3. Online\n");
             printf("4. LAN\n");
+            printf("Type: ");
             InputBuffer3 = fgetc(stdin);
             InputBuffer3 -= '0';
             
@@ -81,8 +82,56 @@ int main(int argc, char** argv) {
         printf("Would you like to filter by start date? [Y/N]: ");
         InputBuffer3 = fgetc(stdin);
         if ((InputBuffer3 & ~0x20) == 'Y') {
+            printf("Please enter a date in the format of '2023-11-12'.\n");
+            printf("Start Date: ");
+            fgets(InputBuffer, 128, stdin);
+            strncpy(StartDate, InputBuffer, 32);
+        }
+        
+        printf("Would you like to filter by end date? [Y/N]: ");
+        InputBuffer3 = fgetc(stdin);
+        if ((InputBuffer3 & ~0x20) == 'Y') {
+            printf("Please enter a date in the format of '2023-11-12'.\n");
+            printf("End Date: ");
+            fgets(InputBuffer, 128, stdin);
+            strncpy(EndDate, InputBuffer, 32);
+        }
+        
+        printf("Would you like to filter by ranking? [Y/N]: ");
+        InputBuffer3 = fgetc(stdin);
+        if ((InputBuffer3 & ~0x20) == 'Y') {
+            printf("Please select a ranking filter: \n");
+            printf("1. Top 5\n");
+            printf("2. Top 10\n");
+            printf("3. Top 20\n");
+            printf("4. Top 30\n");
+            printf("5. Top 50\n");
+            printf("Filter: ");
+            InputBuffer3 = fgetc(stdin);
+            InputBuffer3 -= '0';
+            switch (InputBuffer3) {
+                case 1:
+                    RankingFilter = HLTV_RF_TOP5;
+                    break;
+                case 2:
+                    RankingFilter = HLTV_RF_TOP10;
+                    break;
+                case 3:
+                    RankingFilter = HLTV_RF_TOP20;
+                    break;
+                case 4:
+                    RankingFilter = HLTV_RF_TOP30;
+                    break;
+                case 5:
+                    RankingFilter = HLTV_RF_TOP50;
+                    break;
+                default:
+                    RankingFilter = HLTV_RF_NONE;
+                    break;
+            }
             
         }
+        
     } else {
         PlayerId = Selected->PlayerId;
         MatchType = HLTV_MT_ALL;

@@ -103,7 +103,7 @@ int main(int argc, char** argv) {
         PHLTV_MATCH_LIST MatchList = HltvGenerateMatchList(PlayerIds[i],
             InputBuffer);
         
-        printf("\n%lu matches found.\n", MatchList->MatchCount);
+        printf("%lu matches found.\n", MatchList->MatchCount);
         
         WORD32 Player = CsvCreateEntry(PlayerTable, 2 + i);
         

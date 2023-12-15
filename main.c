@@ -10,9 +10,11 @@
 #include <string.h>
 #include "hltv/hltv.h"
 #include "net/netapi.h"
+#include "csv/csv.h"
 
 int main(int argc, char** argv) {
     NetInit();
+    CsvInit();
     
     printf("Please enter a player name: ");
     char* InputBuffer = malloc(128);
@@ -163,13 +165,14 @@ int main(int argc, char** argv) {
         MatchType, StartDate, EndDate, RankingFilter, WinType);
     HltvDestroySearch(SearchResults);
     
-    printf("%lu matches found.\n", MatchList->MatchCount);
-    printf("%i matches Won.\n", MatchList->MatchesWon);
-    printf("%i matches Lost.\n", MatchList->MatchesLost);
-    printf("%i matches Tied.\n", MatchList->MatchesTied);
+    printf("\n%lu matches found.\n", MatchList->MatchCount);
     
-    printf("Lowest Rating: %0.2f\n", MatchList->LowestRating);
-    printf("Highest Rating: %0.2f\n", MatchList->HighestRating);
+    strcat(InputBuffer, ".csv");
+    WORD32 PlayerTable = CsvCreateTable(InputBuffer);
+    
+    
+    NetShutdown();
+    CsvShutdown();
     
     return 0;
 }

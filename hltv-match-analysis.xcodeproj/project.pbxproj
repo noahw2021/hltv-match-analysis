@@ -13,6 +13,9 @@
 		8C2448532B2B906600ADB508 /* netapi_dl.c in Sources */ = {isa = PBXBuildFile; fileRef = 8C2448512B2B906600ADB508 /* netapi_dl.c */; };
 		8C2448562B2BAA6D00ADB508 /* libcurl.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C2448552B2BAA6D00ADB508 /* libcurl.tbd */; };
 		8C4892E72B2C3B9300E7972C /* hltv_matches.c in Sources */ = {isa = PBXBuildFile; fileRef = 8C4892E62B2C3B9300E7972C /* hltv_matches.c */; };
+		8C4892ED2B2C566200E7972C /* csv_generate.c in Sources */ = {isa = PBXBuildFile; fileRef = 8C4892E92B2C566200E7972C /* csv_generate.c */; };
+		8C4892EE2B2C566200E7972C /* csv_init.c in Sources */ = {isa = PBXBuildFile; fileRef = 8C4892EA2B2C566200E7972C /* csv_init.c */; };
+		8C4892EF2B2C566200E7972C /* csv_manip.c in Sources */ = {isa = PBXBuildFile; fileRef = 8C4892EB2B2C566200E7972C /* csv_manip.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,6 +40,10 @@
 		8C2448512B2B906600ADB508 /* netapi_dl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = netapi_dl.c; sourceTree = "<group>"; };
 		8C2448552B2BAA6D00ADB508 /* libcurl.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libcurl.tbd; path = usr/lib/libcurl.tbd; sourceTree = SDKROOT; };
 		8C4892E62B2C3B9300E7972C /* hltv_matches.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = hltv_matches.c; sourceTree = "<group>"; };
+		8C4892E92B2C566200E7972C /* csv_generate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = csv_generate.c; sourceTree = "<group>"; };
+		8C4892EA2B2C566200E7972C /* csv_init.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = csv_init.c; sourceTree = "<group>"; };
+		8C4892EB2B2C566200E7972C /* csv_manip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = csv_manip.c; sourceTree = "<group>"; };
+		8C4892EC2B2C566200E7972C /* csv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = csv.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +61,7 @@
 		8C2448342B2B6E4000ADB508 = {
 			isa = PBXGroup;
 			children = (
+				8C4892E82B2C565200E7972C /* csv */,
 				8C24484A2B2B6FBC00ADB508 /* hltv */,
 				8C2448492B2B6FB900ADB508 /* net */,
 				8C2448472B2B6FB700ADB508 /* main.c */,
@@ -96,6 +104,17 @@
 				8C2448552B2BAA6D00ADB508 /* libcurl.tbd */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8C4892E82B2C565200E7972C /* csv */ = {
+			isa = PBXGroup;
+			children = (
+				8C4892E92B2C566200E7972C /* csv_generate.c */,
+				8C4892EA2B2C566200E7972C /* csv_init.c */,
+				8C4892EB2B2C566200E7972C /* csv_manip.c */,
+				8C4892EC2B2C566200E7972C /* csv.h */,
+			);
+			path = csv;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -157,9 +176,12 @@
 			files = (
 				8C2448532B2B906600ADB508 /* netapi_dl.c in Sources */,
 				8C2448482B2B6FB700ADB508 /* main.c in Sources */,
+				8C4892EE2B2C566200E7972C /* csv_init.c in Sources */,
 				8C2448522B2B906600ADB508 /* netapi_init.c in Sources */,
+				8C4892EF2B2C566200E7972C /* csv_manip.c in Sources */,
 				8C4892E72B2C3B9300E7972C /* hltv_matches.c in Sources */,
 				8C24484D2B2B902B00ADB508 /* hltv_search.c in Sources */,
+				8C4892ED2B2C566200E7972C /* csv_generate.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

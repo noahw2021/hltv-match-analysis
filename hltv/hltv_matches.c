@@ -209,8 +209,10 @@ PHLTV_MATCH_LIST HltvGenerateMatchList(unsigned long PlayerId,
     float Starg0 = 0.f;
     for (int i = 0; i < MatchList->MatchCount; i++) {
         PHLTV_MATCH_ENTRY ThisMatch = &MatchList->Matches[i];
-        Starg0 += pow((ThisMatch->Rating - MatchList->AverageRating), 2);
+        if (ThisMatch->Rating < MatchList->AverageRating)
+            Starg0 += pow((ThisMatch->Rating - MatchList->AverageRating), 2);
     }
+    
     Starg0 /= MatchList->MatchCount;
     MatchList->StandardDeviation = sqrt(Starg0);
     MatchList->WeightedConsistencyFactor = ((MatchList->AverageRating - 1) /

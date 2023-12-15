@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "hltv/hltv.h"
 #include "net/netapi.h"
 #include "csv/csv.h"
@@ -18,11 +19,16 @@ int main(int argc, char** argv) {
     
     int PlayerCount = 0;
     char* InputBuffer = malloc(128);
-    char** Players = malloc(sizeof(char*) * 64);
-    unsigned long* PlayerIds = malloc(sizeof(unsigned long) * 64);
+    char** Players = malloc(sizeof(char*) * 128);
+    unsigned long* PlayerIds = malloc(sizeof(unsigned long) * 128);
     printf("Please enter player names, and ':q' to stop.\n");
-    for (int i = 0; i < 64; i++) {
-        fgets(InputBuffer, 128, stdin);
+    
+    FILE* Playalist = fopen("playerlist.txt", "r");
+    if (!Playalist)
+        Playalist = stdin;
+    
+    for (int i = 0; i < 128; i++) {
+        fgets(InputBuffer, 128, Playalist);
         if (strstr(InputBuffer, ":q")) {
             PlayerCount = i;
             break;
@@ -62,6 +68,8 @@ int main(int argc, char** argv) {
             PlayerIds[i] = SearchList->Entries[Selector - 1].PlayerId;
             strcpy(Players[i], SearchList->Entries[Selector - 1].PlayerName);
             HltvDestroySearch(SearchList);
+            
+            usleep(100000);
         }
     }
     
@@ -91,6 +99,7 @@ int main(int argc, char** argv) {
     CsvEntryAddMember(PlayerTable, Header, "Consistency Factor");
     
     for (int i = 0; i < PlayerCount; i++) {
+        usleep(1000000);
         PHLTV_MATCH_LIST MatchList = HltvGenerateMatchList(PlayerIds[i],
             InputBuffer);
         

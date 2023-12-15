@@ -46,8 +46,8 @@
             filePath = "main.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
+            startingLineNumber = "103"
+            endingLineNumber = "103"
             landmarkName = "main(argc, argv)"
             landmarkType = "9">
             <Locations>

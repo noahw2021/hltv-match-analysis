@@ -38,12 +38,12 @@ int main(int argc, char** argv) {
     char InputBuffer3 = fgetc(stdin);
     
     // Filter setup
-    unsigned long PlayerId;
-    int MatchType;
-    char StartDate[32];
-    char EndDate[32];
-    int RankingFilter;
-    int WinType;
+    unsigned long PlayerId = Selected->PlayerId;
+    int MatchType = HLTV_MT_ALL;
+    char StartDate[32] = "NONE";
+    char EndDate[32] = "NONE";
+    int RankingFilter = HLTV_RF_NONE;
+    int WinType = HLTV_WT_ALL;
     
     if ((InputBuffer3 & ~0x20) == 'Y') {
         printf("Would you like to filter by Match Type? [Y/N]: ");
@@ -129,17 +129,47 @@ int main(int argc, char** argv) {
                     RankingFilter = HLTV_RF_NONE;
                     break;
             }
-            
         }
         
-    } else {
-        PlayerId = Selected->PlayerId;
-        MatchType = HLTV_MT_ALL;
-        strcpy(StartDate, "NONE");
-        strcpy(EndDate, "NONE");
-        RankingFilter = HLTV_RF_NONE;
-        WinType = HLTV_WT_ALL;
+        printf("Would you like to filter by match result? [Y/N]: ");
+        InputBuffer3 = fgetc(stdin);
+        if ((InputBuffer3 & ~0x20) == 'Y') {
+            printf("Please select a match result filter: \n");
+            printf("1. Win\n");
+            printf("2. Loss\n");
+            printf("3. Tie\n");
+            
+            InputBuffer3 = fgetc(stdin);
+            InputBuffer3 -= '0';
+            switch (InputBuffer3) {
+                case 1:
+                    WinType = HLTV_WT_WIN;
+                    break;
+                case 2:
+                    WinType = HLTV_WT_LOSE;
+                    break;
+                case 3:
+                    WinType = HLTV_WT_TIE;
+                    break;
+                default:
+                    WinType = HLTV_WT_ALL;
+                    break;
+            }
+        }
+        
     }
+    
+    PHLTV_MATCH_LIST MatchList = HltvGenerateMatchList(PlayerId,
+        MatchType, StartDate, EndDate, RankingFilter, WinType);
+    HltvDestroySearch(SearchResults);
+    
+    printf("%lu matches found.\n", MatchList->MatchCount);
+    printf("%i matches Won.\n", MatchList->MatchesWon);
+    printf("%i matches Lost.\n", MatchList->MatchesLost);
+    printf("%i matches Tied.\n", MatchList->MatchesTied);
+    
+    printf("Lowest Rating: %0.2f\n", MatchList->LowestRating);
+    printf("Highest Rating: %0.2f\n", MatchList->HighestRating);
     
     return 0;
 }

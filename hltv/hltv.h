@@ -9,15 +9,15 @@
 #define hltv_h
 
 typedef struct _HLTV_MATCH_ENTRY {
-    unsigned long MatchId;
-    
-    char Date[32];
     char PlayerTeam[32];
     char OpponentTeam[32];
     char Map[8];
     
+    int RoundsWon;
+    int RoundsLost;
+    unsigned char DidTeamWin;
+    unsigned char DidTeamTie;
     int Kills, Death;
-    int KDDiff;
     
     float Rating;
 }HLTV_MATCH_ENTRY, *PHLTV_MATCH_ENTRY;
@@ -51,24 +51,28 @@ typedef struct _HLTV_MATCH_LIST {
     PHLTV_MATCH_ENTRY Matches;
     unsigned long MatchCount;
     
+    // determined thru loop
     int MatchesWon;
     int MatchesLost;
-    
+    int MatchesTied;
     int Rounds;
+    int Kills, Death;
+    float HighestRating;
+    float LowestRating;
+    float RatingSum;
+    float RatingSumWon;
+    float RatingSumLost;
+    float RatingSumTIe;
+    
+    // things that must be determined not in loop
     float KillsPerRound;
     float DeathsPerRound;
-    int Kills, Death;
     float AverageRating;
     float AverageRatingWin;
     float AverageRatingLoss;
-    float HighestRating;
-    float LowestRating;
+    float AverageRatingTie;
     float StandardDeviation;
     float WeightedConsistencyFactor;
-    
-    float Median;
-    float Q1;
-    float Q3;
 }HLTV_MATCH_LIST, *PHLTV_MATCH_LIST;
 
 typedef struct _HLTV_SEARCH_ENTRY {

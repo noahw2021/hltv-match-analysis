@@ -16,37 +16,58 @@ int main(int argc, char** argv) {
     NetInit();
     CsvInit();
     
-    printf("Please enter a player name: ");
+    int PlayerCount = 0;
     char* InputBuffer = malloc(128);
-    fgets(InputBuffer, 128, stdin);
-    if (strstr(InputBuffer, "\n")) {
-        *(strstr(InputBuffer, "\n")) = 0x00;
+    char** Players = malloc(sizeof(char*) * 64);
+    unsigned long* PlayerIds = malloc(sizeof(unsigned long) * 64);
+    printf("Please enter player names, and ':q' to stop.\n");
+    for (int i = 0; i < 64; i++) {
+        fgets(InputBuffer, 128, stdin);
+        if (strstr(InputBuffer, ":q")) {
+            PlayerCount = i;
+            break;
+        }
+        
+        Players[i] = malloc(strlen(InputBuffer) + 1);
+        strcpy(Players[i], InputBuffer);
     }
     
-    PHLTV_SEARCH_LIST SearchResults = HltvSearchPlayer(InputBuffer);
-    printf("Found %lu results.\n", SearchResults->EntryCount);
-    for (int i = 0; i < SearchResults->EntryCount; i++) {
-        PHLTV_SEARCH_ENTRY ThisEntry = &SearchResults->Entries[i];
-        printf("%i. '%s' of %s\n", i + 1, ThisEntry->PlayerName, ThisEntry->Country);
+    for (int i = 0; i < PlayerCount; i++) {
+        if (strstr(Players[i], "\n"))
+            strstr(Players[i], "\n")[0] = 0x00;
+        PHLTV_SEARCH_LIST SearchList = HltvSearchPlayer(Players[i]);
+        if (SearchList->EntryCount == 0) {
+            printf("No player with name '%s' found.\n", Players[i]);
+            for (int j = 0; j < PlayerCount; j++)
+                free(Players[j]);
+            free(Players);
+            free(InputBuffer);
+            free(PlayerIds);
+            HltvDestroySearch(SearchList);
+            NetShutdown();
+            CsvShutdown();
+            return - 1;
+        } else if (SearchList->EntryCount == 1) {
+            PlayerIds[i] = SearchList->Entries[0].PlayerId;
+            strcpy(Players[i], SearchList->Entries[0].PlayerName);
+            HltvDestroySearch(SearchList);
+        } else {
+            printf("%lu players with name '%s' were found, please select one: \n", SearchList->EntryCount, Players[i]);
+            for (int i = 0; i < SearchList->EntryCount; i++)
+                printf("%i. %s of %s\n", i + 1, SearchList->Entries[i].PlayerName,
+                    SearchList->Entries[i].Country);
+            printf("\nPlayer: ");
+            int Selector;
+            scanf("%i", &Selector);
+            PlayerIds[i] = SearchList->Entries[Selector - 1].PlayerId;
+            strcpy(Players[i], SearchList->Entries[Selector - 1].PlayerName);
+            HltvDestroySearch(SearchList);
+        }
     }
-    
-    printf("Please select which player: ");
-    unsigned long InputBuffer2;
-    scanf("%lu", &InputBuffer2);
-    unsigned long RealSector = InputBuffer2 - 1;
-    PHLTV_SEARCH_ENTRY Selected = &SearchResults->Entries[RealSector];
-    unsigned long PlayerId = Selected->PlayerId;
     
     fgetc(stdin);
     printf("Please type a match query string, or blank:\n");
     fgets(InputBuffer, 128, stdin);
-    
-    
-    PHLTV_MATCH_LIST MatchList = HltvGenerateMatchList(PlayerId,
-        InputBuffer);
-    HltvDestroySearch(SearchResults);
-    
-    printf("\n%lu matches found.\n", MatchList->MatchCount);
     
     WORD32 PlayerTable = CsvCreateTable("player.csv");
     WORD32 Header = CsvCreateEntry(PlayerTable, 1);
@@ -69,47 +90,54 @@ int main(int argc, char** argv) {
     CsvEntryAddMember(PlayerTable, Header, "Standard Deviation");
     CsvEntryAddMember(PlayerTable, Header, "Consistency Factor");
     
-    WORD32 Player = CsvCreateEntry(PlayerTable, 2);
-    
-    PHLTV_MATCH_LIST PlayerList = MatchList;
-    CsvEntryAddMember(PlayerTable, Player, InputBuffer);
-    
-    char* Bfr = malloc(128);
-    
-    sprintf(Bfr, "%lu", PlayerList->MatchCount);
-    CsvEntryAddMember(PlayerTable, Player, Bfr);
-    sprintf(Bfr, "%d", PlayerList->MatchesWon);
-    CsvEntryAddMember(PlayerTable, Player, Bfr);
-    sprintf(Bfr, "%d", PlayerList->MatchesLost);
-    CsvEntryAddMember(PlayerTable, Player, Bfr);
-    sprintf(Bfr, "%d", PlayerList->MatchesTied);
-    CsvEntryAddMember(PlayerTable, Player, Bfr);
-    sprintf(Bfr, "%d", PlayerList->Rounds);
-    CsvEntryAddMember(PlayerTable, Player, Bfr);
-    sprintf(Bfr, "%d", PlayerList->Kills);
-    CsvEntryAddMember(PlayerTable, Player, Bfr);
-    sprintf(Bfr, "%d", PlayerList->Death);
-    CsvEntryAddMember(PlayerTable, Player, Bfr);
-    sprintf(Bfr, "%.2f", PlayerList->LowestRating);
-    CsvEntryAddMember(PlayerTable, Player, Bfr);
-    sprintf(Bfr, "%.2f", PlayerList->HighestRating);
-    CsvEntryAddMember(PlayerTable, Player, Bfr);
-    sprintf(Bfr, "%.2f", PlayerList->KillsPerRound);
-    CsvEntryAddMember(PlayerTable, Player, Bfr);
-    sprintf(Bfr, "%.2f", PlayerList->DeathsPerRound);
-    CsvEntryAddMember(PlayerTable, Player, Bfr);
-    sprintf(Bfr, "%.2f", PlayerList->AverageRating);
-    CsvEntryAddMember(PlayerTable, Player, Bfr);
-    sprintf(Bfr, "%.2f", PlayerList->AverageRatingLoss);
-    CsvEntryAddMember(PlayerTable, Player, Bfr);
-    sprintf(Bfr, "%.2f", PlayerList->AverageRatingWin);
-    CsvEntryAddMember(PlayerTable, Player, Bfr);
-    sprintf(Bfr, "%.2f", PlayerList->AverageRatingTie);
-    CsvEntryAddMember(PlayerTable, Player, Bfr);
-    sprintf(Bfr, "%.2f", PlayerList->StandardDeviation);
-    CsvEntryAddMember(PlayerTable, Player, Bfr);
-    sprintf(Bfr, "%.2f", PlayerList->WeightedConsistencyFactor);
-    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    for (int i = 0; i < PlayerCount; i++) {
+        PHLTV_MATCH_LIST MatchList = HltvGenerateMatchList(PlayerIds[i],
+            InputBuffer);
+        
+        printf("\n%lu matches found.\n", MatchList->MatchCount);
+        
+        WORD32 Player = CsvCreateEntry(PlayerTable, 2 + i);
+        
+        PHLTV_MATCH_LIST PlayerList = MatchList;
+        CsvEntryAddMember(PlayerTable, Player, Players[i]);
+        
+        char* Bfr = malloc(128);
+        
+        sprintf(Bfr, "%lu", PlayerList->MatchCount);
+        CsvEntryAddMember(PlayerTable, Player, Bfr);
+        sprintf(Bfr, "%d", PlayerList->MatchesWon);
+        CsvEntryAddMember(PlayerTable, Player, Bfr);
+        sprintf(Bfr, "%d", PlayerList->MatchesLost);
+        CsvEntryAddMember(PlayerTable, Player, Bfr);
+        sprintf(Bfr, "%d", PlayerList->MatchesTied);
+        CsvEntryAddMember(PlayerTable, Player, Bfr);
+        sprintf(Bfr, "%d", PlayerList->Rounds);
+        CsvEntryAddMember(PlayerTable, Player, Bfr);
+        sprintf(Bfr, "%d", PlayerList->Kills);
+        CsvEntryAddMember(PlayerTable, Player, Bfr);
+        sprintf(Bfr, "%d", PlayerList->Death);
+        CsvEntryAddMember(PlayerTable, Player, Bfr);
+        sprintf(Bfr, "%.2f", PlayerList->LowestRating);
+        CsvEntryAddMember(PlayerTable, Player, Bfr);
+        sprintf(Bfr, "%.2f", PlayerList->HighestRating);
+        CsvEntryAddMember(PlayerTable, Player, Bfr);
+        sprintf(Bfr, "%.2f", PlayerList->KillsPerRound);
+        CsvEntryAddMember(PlayerTable, Player, Bfr);
+        sprintf(Bfr, "%.2f", PlayerList->DeathsPerRound);
+        CsvEntryAddMember(PlayerTable, Player, Bfr);
+        sprintf(Bfr, "%.2f", PlayerList->AverageRating);
+        CsvEntryAddMember(PlayerTable, Player, Bfr);
+        sprintf(Bfr, "%.2f", PlayerList->AverageRatingLoss);
+        CsvEntryAddMember(PlayerTable, Player, Bfr);
+        sprintf(Bfr, "%.2f", PlayerList->AverageRatingWin);
+        CsvEntryAddMember(PlayerTable, Player, Bfr);
+        sprintf(Bfr, "%.2f", PlayerList->AverageRatingTie);
+        CsvEntryAddMember(PlayerTable, Player, Bfr);
+        sprintf(Bfr, "%.2f", PlayerList->StandardDeviation);
+        CsvEntryAddMember(PlayerTable, Player, Bfr);
+        sprintf(Bfr, "%.2f", PlayerList->WeightedConsistencyFactor);
+        CsvEntryAddMember(PlayerTable, Player, Bfr);
+    }
     
     CsvGenerate(PlayerTable);
     

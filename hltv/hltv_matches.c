@@ -213,8 +213,8 @@ PHLTV_MATCH_LIST HltvGenerateMatchList(unsigned long PlayerId,
     }
     Starg0 /= MatchList->MatchCount;
     MatchList->StandardDeviation = sqrt(Starg0);
-    MatchList->WeightedConsistencyFactor = (MatchList->AverageRating - 1) /
-        (MatchList->StandardDeviation + 1) * 1.4f;
+    MatchList->WeightedConsistencyFactor = ((MatchList->AverageRating - 1) /
+        (MatchList->StandardDeviation + 1) * 1.4f) + 1;
     
     return MatchList;
 }

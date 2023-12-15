@@ -91,8 +91,7 @@ PHLTV_SEARCH_LIST HltvSearchPlayer(const char* Name);
 void HltvDestroySearch(PHLTV_SEARCH_LIST SearchList);
 
 PHLTV_MATCH_LIST HltvGenerateMatchList(unsigned long PlayerId,
-    int MatchType, char* StartDate, char* EndDate, int RankFilter,
-    int WinType);
+    char* QString);
 
 void HltvDestroyMatchList(PHLTV_MATCH_LIST MatchList);
 

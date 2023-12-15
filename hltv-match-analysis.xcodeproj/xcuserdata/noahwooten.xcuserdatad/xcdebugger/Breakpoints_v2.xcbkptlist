@@ -94,10 +94,42 @@
             filePath = "main.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
             landmarkName = "main(argc, argv)"
             landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "848A7F13-9C54-4861-B8A8-0CBC1858B8C4 - c51d265d31a9d0b9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "main"
+                  moduleName = "hltv-match-analysis"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/noahwooten/Desktop/Source/hltv-match-analysis/main.c"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "162"
+                  endingLineNumber = "162"
+                  offsetFromSymbolStart = "1608">
+               </Location>
+               <Location
+                  uuid = "848A7F13-9C54-4861-B8A8-0CBC1858B8C4 - c51d265d31a9c7a2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "main"
+                  moduleName = "hltv-match-analysis"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/noahwooten/Desktop/Source/hltv-match-analysis/main.c"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "45"
+                  endingLineNumber = "45"
+                  offsetFromSymbolStart = "464">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -110,9 +142,9 @@
             filePath = "hltv/hltv_matches.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "182"
-            endingLineNumber = "182"
-            landmarkName = "HltvGenerateMatchList(PlayerId, MatchType, StartDate, EndDate, RankFilter, WinType)"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
+            landmarkName = "HltvGenerateMatchList(PlayerId, QString)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -126,9 +158,9 @@
             filePath = "hltv/hltv_matches.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "190"
-            endingLineNumber = "190"
-            landmarkName = "HltvGenerateMatchList(PlayerId, MatchType, StartDate, EndDate, RankFilter, WinType)"
+            startingLineNumber = "67"
+            endingLineNumber = "67"
+            landmarkName = "HltvGenerateMatchList(PlayerId, QString)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -142,9 +174,9 @@
             filePath = "hltv/hltv_matches.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "204"
-            endingLineNumber = "204"
-            landmarkName = "HltvGenerateMatchList(PlayerId, MatchType, StartDate, EndDate, RankFilter, WinType)"
+            startingLineNumber = "81"
+            endingLineNumber = "81"
+            landmarkName = "HltvGenerateMatchList(PlayerId, QString)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -158,9 +190,9 @@
             filePath = "hltv/hltv_matches.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "278"
-            endingLineNumber = "278"
-            landmarkName = "HltvGenerateMatchList(PlayerId, MatchType, StartDate, EndDate, RankFilter, WinType)"
+            startingLineNumber = "156"
+            endingLineNumber = "156"
+            landmarkName = "HltvGenerateMatchList(PlayerId, QString)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -174,9 +206,9 @@
             filePath = "hltv/hltv_matches.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "312"
-            endingLineNumber = "312"
-            landmarkName = "HltvGenerateMatchList(PlayerId, MatchType, StartDate, EndDate, RankFilter, WinType)"
+            startingLineNumber = "190"
+            endingLineNumber = "190"
+            landmarkName = "HltvGenerateMatchList(PlayerId, QString)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -190,9 +222,9 @@
             filePath = "hltv/hltv_matches.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "315"
-            endingLineNumber = "315"
-            landmarkName = "HltvGenerateMatchList(PlayerId, MatchType, StartDate, EndDate, RankFilter, WinType)"
+            startingLineNumber = "193"
+            endingLineNumber = "193"
+            landmarkName = "HltvGenerateMatchList(PlayerId, QString)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -206,9 +238,9 @@
             filePath = "hltv/hltv_matches.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "279"
-            endingLineNumber = "279"
-            landmarkName = "HltvGenerateMatchList(PlayerId, MatchType, StartDate, EndDate, RankFilter, WinType)"
+            startingLineNumber = "157"
+            endingLineNumber = "157"
+            landmarkName = "HltvGenerateMatchList(PlayerId, QString)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -222,9 +254,9 @@
             filePath = "hltv/hltv_matches.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "313"
-            endingLineNumber = "313"
-            landmarkName = "HltvGenerateMatchList(PlayerId, MatchType, StartDate, EndDate, RankFilter, WinType)"
+            startingLineNumber = "191"
+            endingLineNumber = "191"
+            landmarkName = "HltvGenerateMatchList(PlayerId, QString)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -238,9 +270,9 @@
             filePath = "hltv/hltv_matches.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "301"
-            endingLineNumber = "301"
-            landmarkName = "HltvGenerateMatchList(PlayerId, MatchType, StartDate, EndDate, RankFilter, WinType)"
+            startingLineNumber = "179"
+            endingLineNumber = "179"
+            landmarkName = "HltvGenerateMatchList(PlayerId, QString)"
             landmarkType = "9">
             <Locations>
                <Location
@@ -286,9 +318,9 @@
             filePath = "hltv/hltv_matches.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "235"
-            endingLineNumber = "235"
-            landmarkName = "HltvGenerateMatchList(PlayerId, MatchType, StartDate, EndDate, RankFilter, WinType)"
+            startingLineNumber = "112"
+            endingLineNumber = "112"
+            landmarkName = "HltvGenerateMatchList(PlayerId, QString)"
             landmarkType = "9">
             <Locations>
                <Location
@@ -334,9 +366,9 @@
             filePath = "hltv/hltv_matches.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "207"
-            endingLineNumber = "207"
-            landmarkName = "HltvGenerateMatchList(PlayerId, MatchType, StartDate, EndDate, RankFilter, WinType)"
+            startingLineNumber = "84"
+            endingLineNumber = "84"
+            landmarkName = "HltvGenerateMatchList(PlayerId, QString)"
             landmarkType = "9">
             <Locations>
                <Location
@@ -382,9 +414,9 @@
             filePath = "hltv/hltv_matches.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "178"
-            endingLineNumber = "178"
-            landmarkName = "HltvGenerateMatchList(PlayerId, MatchType, StartDate, EndDate, RankFilter, WinType)"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "HltvGenerateMatchList(PlayerId, QString)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -398,9 +430,9 @@
             filePath = "hltv/hltv_matches.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "192"
-            endingLineNumber = "192"
-            landmarkName = "HltvGenerateMatchList(PlayerId, MatchType, StartDate, EndDate, RankFilter, WinType)"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
+            landmarkName = "HltvGenerateMatchList(PlayerId, QString)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -414,9 +446,73 @@
             filePath = "hltv/hltv_matches.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "236"
-            endingLineNumber = "236"
-            landmarkName = "HltvGenerateMatchList(PlayerId, MatchType, StartDate, EndDate, RankFilter, WinType)"
+            startingLineNumber = "113"
+            endingLineNumber = "113"
+            landmarkName = "HltvGenerateMatchList(PlayerId, QString)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F9B80ABC-96C8-4D86-A5F2-24B85B174176"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "hltv/hltv_matches.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "31"
+            endingLineNumber = "31"
+            landmarkName = "HltvGenerateMatchList(PlayerId, QString)"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "F9B80ABC-96C8-4D86-A5F2-24B85B174176 - a8ad5a573366a373"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "HltvGenerateMatchList"
+                  moduleName = "hltv-match-analysis"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/noahwooten/Desktop/Source/hltv-match-analysis/hltv/hltv_matches.c"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "31"
+                  endingLineNumber = "31"
+                  offsetFromSymbolStart = "232">
+               </Location>
+               <Location
+                  uuid = "F9B80ABC-96C8-4D86-A5F2-24B85B174176 - a8ad5a573366a373"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "HltvGenerateMatchList"
+                  moduleName = "hltv-match-analysis"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/noahwooten/Desktop/Source/hltv-match-analysis/hltv/hltv_matches.c"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "31"
+                  endingLineNumber = "31"
+                  offsetFromSymbolStart = "224">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7442F3DB-79DA-434C-A1D7-5EEDA403EF0E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "hltv/hltv_matches.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
+            landmarkName = "HltvGenerateMatchList(PlayerId, QString)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

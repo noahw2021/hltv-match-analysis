@@ -35,141 +35,83 @@ int main(int argc, char** argv) {
     scanf("%lu", &InputBuffer2);
     unsigned long RealSector = InputBuffer2 - 1;
     PHLTV_SEARCH_ENTRY Selected = &SearchResults->Entries[RealSector];
-    
-    printf("Would you like to apply any filters? [Y/N]: ");
-    char InputBuffer3 = fgetc(stdin);
-    
-    // Filter setup
     unsigned long PlayerId = Selected->PlayerId;
-    int MatchType = HLTV_MT_ALL;
-    char StartDate[32] = "NONE";
-    char EndDate[32] = "NONE";
-    int RankingFilter = HLTV_RF_NONE;
-    int WinType = HLTV_WT_ALL;
     
-    if ((InputBuffer3 & ~0x20) == 'Y') {
-        printf("Would you like to filter by Match Type? [Y/N]: ");
-        InputBuffer3 = fgetc(stdin);
-        if ((InputBuffer3 & ~0x20) == 'Y') {
-            printf("Please select a match type: \n");
-            printf("1. Majors\n");
-            printf("2. Big Events\n");
-            printf("3. Online\n");
-            printf("4. LAN\n");
-            printf("Type: ");
-            InputBuffer3 = fgetc(stdin);
-            InputBuffer3 -= '0';
-            
-            switch (InputBuffer3) {
-                case 1:
-                    MatchType = HLTV_MT_MAJORS;
-                    break;
-                case 2:
-                    MatchType = HLTV_MT_BIGEVNTS;
-                    break;
-                case 3:
-                    MatchType = HLTV_MT_ONLINE;
-                    break;
-                case 4:
-                    MatchType = HLTV_MT_LAN;
-                    break;
-                default:
-                    MatchType = HLTV_MT_ALL;
-                    break;
-            }
-        } else {
-            MatchType = HLTV_MT_ALL;
-        }
-        
-        printf("Would you like to filter by start date? [Y/N]: ");
-        InputBuffer3 = fgetc(stdin);
-        if ((InputBuffer3 & ~0x20) == 'Y') {
-            printf("Please enter a date in the format of '2023-11-12'.\n");
-            printf("Start Date: ");
-            fgets(InputBuffer, 128, stdin);
-            strncpy(StartDate, InputBuffer, 32);
-        }
-        
-        printf("Would you like to filter by end date? [Y/N]: ");
-        InputBuffer3 = fgetc(stdin);
-        if ((InputBuffer3 & ~0x20) == 'Y') {
-            printf("Please enter a date in the format of '2023-11-12'.\n");
-            printf("End Date: ");
-            fgets(InputBuffer, 128, stdin);
-            strncpy(EndDate, InputBuffer, 32);
-        }
-        
-        printf("Would you like to filter by ranking? [Y/N]: ");
-        InputBuffer3 = fgetc(stdin);
-        if ((InputBuffer3 & ~0x20) == 'Y') {
-            printf("Please select a ranking filter: \n");
-            printf("1. Top 5\n");
-            printf("2. Top 10\n");
-            printf("3. Top 20\n");
-            printf("4. Top 30\n");
-            printf("5. Top 50\n");
-            printf("Filter: ");
-            InputBuffer3 = fgetc(stdin);
-            InputBuffer3 -= '0';
-            switch (InputBuffer3) {
-                case 1:
-                    RankingFilter = HLTV_RF_TOP5;
-                    break;
-                case 2:
-                    RankingFilter = HLTV_RF_TOP10;
-                    break;
-                case 3:
-                    RankingFilter = HLTV_RF_TOP20;
-                    break;
-                case 4:
-                    RankingFilter = HLTV_RF_TOP30;
-                    break;
-                case 5:
-                    RankingFilter = HLTV_RF_TOP50;
-                    break;
-                default:
-                    RankingFilter = HLTV_RF_NONE;
-                    break;
-            }
-        }
-        
-        printf("Would you like to filter by match result? [Y/N]: ");
-        InputBuffer3 = fgetc(stdin);
-        if ((InputBuffer3 & ~0x20) == 'Y') {
-            printf("Please select a match result filter: \n");
-            printf("1. Win\n");
-            printf("2. Loss\n");
-            printf("3. Tie\n");
-            
-            InputBuffer3 = fgetc(stdin);
-            InputBuffer3 -= '0';
-            switch (InputBuffer3) {
-                case 1:
-                    WinType = HLTV_WT_WIN;
-                    break;
-                case 2:
-                    WinType = HLTV_WT_LOSE;
-                    break;
-                case 3:
-                    WinType = HLTV_WT_TIE;
-                    break;
-                default:
-                    WinType = HLTV_WT_ALL;
-                    break;
-            }
-        }
-        
-    }
+    fgetc(stdin);
+    printf("Please type a match query string, or blank:\n");
+    fgets(InputBuffer, 128, stdin);
+    
     
     PHLTV_MATCH_LIST MatchList = HltvGenerateMatchList(PlayerId,
-        MatchType, StartDate, EndDate, RankingFilter, WinType);
+        InputBuffer);
     HltvDestroySearch(SearchResults);
     
     printf("\n%lu matches found.\n", MatchList->MatchCount);
     
-    strcat(InputBuffer, ".csv");
-    WORD32 PlayerTable = CsvCreateTable(InputBuffer);
+    WORD32 PlayerTable = CsvCreateTable("player.csv");
+    WORD32 Header = CsvCreateEntry(PlayerTable, 1);
+    CsvEntryAddMember(PlayerTable, Header, "Player Name");
+    CsvEntryAddMember(PlayerTable, Header, "Matches Count");
+    CsvEntryAddMember(PlayerTable, Header, "Matches Won");
+    CsvEntryAddMember(PlayerTable, Header, "Matches Lost");
+    CsvEntryAddMember(PlayerTable, Header, "Matches Tied");
+    CsvEntryAddMember(PlayerTable, Header, "Rounds");
+    CsvEntryAddMember(PlayerTable, Header, "Kills");
+    CsvEntryAddMember(PlayerTable, Header, "Deaths");
+    CsvEntryAddMember(PlayerTable, Header, "Lowest Rating");
+    CsvEntryAddMember(PlayerTable, Header, "Highest Rating");
+    CsvEntryAddMember(PlayerTable, Header, "Kills Per Round");
+    CsvEntryAddMember(PlayerTable, Header, "Deaths Per Round");
+    CsvEntryAddMember(PlayerTable, Header, "Average Rating");
+    CsvEntryAddMember(PlayerTable, Header, "Average Rating (Loss)");
+    CsvEntryAddMember(PlayerTable, Header, "Average Rating (Win)");
+    CsvEntryAddMember(PlayerTable, Header, "Average Rating (Tie)");
+    CsvEntryAddMember(PlayerTable, Header, "Standard Deviation");
+    CsvEntryAddMember(PlayerTable, Header, "Consistency Factor");
     
+    WORD32 Player = CsvCreateEntry(PlayerTable, 2);
+    
+    PHLTV_MATCH_LIST PlayerList = MatchList;
+    CsvEntryAddMember(PlayerTable, Player, InputBuffer);
+    
+    char* Bfr = malloc(128);
+    
+    sprintf(Bfr, "%lu", PlayerList->MatchCount);
+    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    sprintf(Bfr, "%d", PlayerList->MatchesWon);
+    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    sprintf(Bfr, "%d", PlayerList->MatchesLost);
+    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    sprintf(Bfr, "%d", PlayerList->MatchesTied);
+    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    sprintf(Bfr, "%d", PlayerList->Rounds);
+    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    sprintf(Bfr, "%d", PlayerList->Kills);
+    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    sprintf(Bfr, "%d", PlayerList->Death);
+    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    sprintf(Bfr, "%.2f", PlayerList->LowestRating);
+    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    sprintf(Bfr, "%.2f", PlayerList->HighestRating);
+    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    sprintf(Bfr, "%.2f", PlayerList->KillsPerRound);
+    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    sprintf(Bfr, "%.2f", PlayerList->DeathsPerRound);
+    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    sprintf(Bfr, "%.2f", PlayerList->AverageRating);
+    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    sprintf(Bfr, "%.2f", PlayerList->AverageRatingLoss);
+    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    sprintf(Bfr, "%.2f", PlayerList->AverageRatingWin);
+    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    sprintf(Bfr, "%.2f", PlayerList->AverageRatingTie);
+    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    sprintf(Bfr, "%.2f", PlayerList->StandardDeviation);
+    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    sprintf(Bfr, "%.2f", PlayerList->WeightedConsistencyFactor);
+    CsvEntryAddMember(PlayerTable, Player, Bfr);
+    
+    CsvGenerate(PlayerTable);
     
     NetShutdown();
     CsvShutdown();

@@ -13,8 +13,7 @@
 #include <math.h>
 
 PHLTV_MATCH_LIST HltvGenerateMatchList(unsigned long PlayerId,
-    int MatchType, char* StartDate, char* EndDate, int RankFilter,
-    int WinType
+    char* QString
 ) {
     PHLTV_MATCH_LIST MatchList = malloc(sizeof(HLTV_MATCH_LIST));
     memset(MatchList, 0, sizeof(HLTV_MATCH_LIST));
@@ -23,134 +22,12 @@ PHLTV_MATCH_LIST HltvGenerateMatchList(unsigned long PlayerId,
     char* DlBuffer = malloc(512000);
     unsigned long DlBfrSize = 512000;
     char* StatsPage = malloc(512);
-    char* QueryString = malloc(512);
-    memset(QueryString, 0, 512);
-    unsigned char NeedsStrings[2] = {1, 0};
-    
-    if (MatchType != HLTV_MT_ALL) {
-        if (NeedsStrings[0]) {
-            strcat(QueryString, "?");
-            NeedsStrings[0] = 0;
-        }
-        if (NeedsStrings[1]) {
-            strcat(QueryString, "&");
-            NeedsStrings[1] = 0;
-        }
-        
-        switch (MatchType) {
-            case HLTV_MT_MAJORS:
-                strcat(QueryString, "matchType=Majors");
-                break;
-            case HLTV_MT_BIGEVNTS:
-                strcat(QueryString, "matchType=BigEvents");
-                break;
-            case HLTV_MT_ONLINE:
-                strcat(QueryString, "matchType=BigEvents");
-                break;
-            case HLTV_MT_LAN:
-                strcat(QueryString, "matchType=Lan");
-                break;
-        }
-        
-        NeedsStrings[1] = 1;
-    }
-    
-    if (!strstr(StartDate, "NONE")) {
-        if (NeedsStrings[0]) {
-            strcat(QueryString, "?");
-            NeedsStrings[0] = 0;
-        }
-        if (NeedsStrings[1]) {
-            strcat(QueryString, "&");
-            NeedsStrings[1] = 0;
-        }
-        
-        strcat(QueryString, "startDate=");
-        strcat(QueryString, StartDate);
-        
-        if (strstr(EndDate, "NONE")) {
-            time_t CurTime;
-            time(&CurTime);
-            struct tm *LocalTime;
-            LocalTime = localtime(&CurTime);
-            
-            char _EndDate[32];
-            snprintf(_EndDate, 32, "%i-%i-%i", LocalTime->tm_year,
-                LocalTime->tm_mon + 1, LocalTime->tm_mday + 1);
-            
-            strcat(QueryString, "&endDate=");
-            strcat(QueryString, _EndDate);
-        }
-        
-        NeedsStrings[1] = 1;
-    }
-    
-    if (!strstr(EndDate, "NONE")) {
-        if (NeedsStrings[0]) {
-            strcat(QueryString, "?");
-            NeedsStrings[0] = 0;
-        }
-        if (NeedsStrings[1]) {
-            strcat(QueryString, "&");
-            NeedsStrings[1] = 0;
-        }
-        
-        strcat(QueryString, "endDate=");
-        strcat(QueryString, EndDate);
-        
-        if (!strstr(StartDate, "NONE")) {
-            time_t CurTime;
-            time(&CurTime);
-            struct tm *LocalTime;
-            LocalTime = localtime(&CurTime);
-            
-            char _StartDate[32];
-            snprintf(_StartDate, 32, "%i-%i-%i", LocalTime->tm_year,
-                LocalTime->tm_mon + 1, LocalTime->tm_mday + 1);
-            
-            strcat(QueryString, "&startDate=");
-            strcat(QueryString, _StartDate);
-        }
-        
-        NeedsStrings[1] = 1;
-    }
-    
-    if (RankFilter != HLTV_RF_NONE) {
-        if (NeedsStrings[0]) {
-            strcat(QueryString, "?");
-            NeedsStrings[0] = 0;
-        }
-        if (NeedsStrings[1]) {
-            strcat(QueryString, "&");
-            NeedsStrings[1] = 0;
-        }
-        
-        strcat(QueryString, "rankingFilter=");
-        
-        switch (RankFilter) {
-            case HLTV_RF_TOP5:
-                strcat(QueryString, "Top5");
-                break;
-            case HLTV_RF_TOP10:
-                strcat(QueryString, "Top10");
-                break;
-            case HLTV_RF_TOP20:
-                strcat(QueryString, "Top20");
-                break;
-            case HLTV_RF_TOP30:
-                strcat(QueryString, "Top30");
-                break;
-            case HLTV_RF_TOP50:
-                strcat(QueryString, "Top50");
-                break;
-        }
-        
-        NeedsStrings[1] = 1;
-    }
+    char* QueryString = QString;
+    if (strstr(QueryString, "\n"))
+        strstr(QueryString, "\n")[0] = 0x00;
     
     snprintf(StatsPage, 512, "https://www.hltv.org/stats/players/matches/"
         "%lu/playa%s", PlayerId, QueryString);
-    free(QueryString);
     NetDownload(StatsPage, DlBuffer, DlBfrSize, &DlBfrSize);
     if (DlBfrSize > 512000) {
         free(DlBuffer);
@@ -263,6 +140,7 @@ PHLTV_MATCH_LIST HltvGenerateMatchList(unsigned long PlayerId,
             NumBuf[i] = *ThisMatch;
             ThisMatch++;
         }
+        ThisEntry->Death = atoi(NumBuf);
         
         // Find Rating
         memset(NumBuf, 0, 5);
@@ -335,27 +213,8 @@ PHLTV_MATCH_LIST HltvGenerateMatchList(unsigned long PlayerId,
     }
     Starg0 /= MatchList->MatchCount;
     MatchList->StandardDeviation = sqrt(Starg0);
-    MatchList->WeightedConsistencyFactor =
-        ((pow(MatchList->AverageRating, 1.4f) +
-        ((1.0f - MatchList->StandardDeviation) * 2.f)) / 2.f);
-    
-    /*
-     The weighted consistency factor is a measure of
-     a players consistency, with a heavy bias towards consistent
-     1.0+ players.
-     
-     As a base for the unit, a 1.0 WCF is equivillent to a player
-     who has an 100% 1.0 rating.
-     
-     examples:
-     2.00 Rating,  50% Consistency: 1.32 Rating
-     1.30 Rating,  85% Consistency: 1.23 Rating
-     1.15 Rating, 100% Consistency: 1.21 Rating
-     1.00 Rating, 100% Consistency: 1.00 Rating
-     0.95 Rating, 100% Consistency: 0.93 Rating
-     0.95 Rating,  95% Consistency: 0.88 Rating
-     
-     */
+    MatchList->WeightedConsistencyFactor = (MatchList->AverageRating - 1) /
+        (MatchList->StandardDeviation + 1) * 1.4f;
     
     return MatchList;
 }

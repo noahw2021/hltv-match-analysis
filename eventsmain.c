@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>6
 
 void emain(void) {
     int EventCount = 0;
@@ -27,14 +28,16 @@ void emain(void) {
         }
         
         Events[i] = malloc(strlen(InputBuffer) + 1);
-        EventIDs[i] = strtoul(Events[i], NULL, 10);
         strcpy(Events[i], InputBuffer);
+        EventIDs[i] = strtoul(Events[i], NULL, 10);
     }
     
     HltvStartEventAnalysis();
     
-    for (int i = 0; i < 128; i++)
+    for (int i = 0; i < EventCount; i++) {
         HltvAnalyzeEvent(EventIDs[i]);
+        usleep(1000000);
+    }
     
     int EventPlayersCount;
     PHLTV_EVENT_PLAYER EventPlayers = HltvGetEventsPlayerList(
@@ -54,6 +57,9 @@ void emain(void) {
     
     for (int i = 0; i < EventPlayersCount; i++) {
         PHLTV_EVENT_PLAYER ThisPlayer = &EventPlayers[i];
+        if (ThisPlayer->MatchCount[1] == 0)
+            continue;
+        
         char* ThisBuffer = malloc(128);
         unsigned long ThisEntry = CsvCreateEntry(Merchants, 1 + i);
         
@@ -65,10 +71,10 @@ void emain(void) {
         float AbsoluteChange = PlayoffsRating - GroupsRating;
         float PercentChange = PlayoffsRating / GroupsRating;
         
-        snprintf(ThisBuffer, 128, "%s", ThisPlayer->PlayerName);
+        sprintf(ThisBuffer, "%s", ThisPlayer->PlayerName);
         CsvEntryAddMember(Merchants, ThisEntry, ThisBuffer);
         
-        snprintf(ThisBuffer, 128, "%i", MatchesPlayed);
+        snprintf(ThisBuffer, 128, "%i", MatchesPlayed / 2);
         CsvEntryAddMember(Merchants, ThisEntry, ThisBuffer);
         
         snprintf(ThisBuffer, 128, "%0.2f", AverageRating);
@@ -80,10 +86,10 @@ void emain(void) {
         snprintf(ThisBuffer, 128, "%0.2f", GroupsRating);
         CsvEntryAddMember(Merchants, ThisEntry, ThisBuffer);
         
-        snprintf(ThisBuffer, 128, "%i", ThisPlayer->MatchCount[1]);
+        snprintf(ThisBuffer, 128, "%i", ThisPlayer->MatchCount[1] / 2);
         CsvEntryAddMember(Merchants, ThisEntry, ThisBuffer);
         
-        snprintf(ThisBuffer, 128, "%i", ThisPlayer->MatchCount[0]);
+        snprintf(ThisBuffer, 128, "%i", ThisPlayer->MatchCount[0] / 2);
         CsvEntryAddMember(Merchants, ThisEntry, ThisBuffer);
         
         snprintf(ThisBuffer, 128, "%0.2f", AbsoluteChange);

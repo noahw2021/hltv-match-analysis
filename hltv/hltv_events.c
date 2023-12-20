@@ -42,6 +42,11 @@ void HltvAnalyzeEvent(unsigned long EventId) {
     }
     
     char* Playoffs = strstr(EventBuffer, "<div class=\"section-header brackets\"><span id=\"Brackets\">Playoffs</span>");
+    if (!Playoffs) {
+        free(EventBuffer);
+        return;
+    }
+    
     Playoffs += strlen("<div class=\"section-header brackets\"><span id=\"Brackets\">Playoffs</span>");
     char* Groups = strstr(Playoffs, "section-header brackets");
     
@@ -51,10 +56,13 @@ void HltvAnalyzeEvent(unsigned long EventId) {
         Playoffs += strlen("nick&quot;:&quot;");
         
         char PlayerName[64];
+        memset(PlayerName, 0, 64);
         for (int i = 0; i < 64; i++) {
             if (*Playoffs == '&')
                 break;
-            
+            if (*Playoffs == 0x00)
+                break;
+                
             PlayerName[i] = *Playoffs;
             Playoffs++;
         }
@@ -62,6 +70,7 @@ void HltvAnalyzeEvent(unsigned long EventId) {
         Playoffs = strstr(Playoffs, "rating&quot;:&quot;");
         Playoffs += strlen("rating&quot;:&quot;");
         char RatingBfr[16];
+        memset(RatingBfr, 0, 16);
         for (int i = 0; i < 16; i++) {
             if (*Playoffs == '&')
                 break;
@@ -72,9 +81,11 @@ void HltvAnalyzeEvent(unsigned long EventId) {
         float Rating = atof(RatingBfr);
         
         unsigned char PlayerFound = 0;
+        printf("n: %s\n", PlayerName);
+        
         for (int i = 0; i < EventListCnt; i++) {
             PHLTV_EVENT_PLAYER ThisPlaya = &EventList[i];
-            if (!strcmp(ThisPlaya->PlayerName, Playoffs)) {
+            if (strstr(ThisPlaya->PlayerName, PlayerName)) {
                 ThisPlaya->MatchCount[1]++;
                 ThisPlaya->PlayerRatingSum[1] += Rating;
                 PlayerFound = 1;
@@ -85,8 +96,9 @@ void HltvAnalyzeEvent(unsigned long EventId) {
         if (!PlayerFound) {
             EventList = realloc(EventList,
                 sizeof(HLTV_EVENT_PLAYER) * (EventListCnt + 1));
-            memset(&EventList[EventListCnt], 0, sizeof(HLTV_EVENT_PLAYER));
-            PHLTV_EVENT_PLAYER ThisPlayer = &EventList[EventListCnt++];
+            PHLTV_EVENT_PLAYER ThisPlayer = &EventList[EventListCnt];
+            EventListCnt++;
+            memset(ThisPlayer, 0, sizeof(HLTV_EVENT_PLAYER));
             
             strcpy(ThisPlayer->PlayerName, PlayerName);
             ThisPlayer->PlayerRatingSum[1] = Rating;
@@ -102,6 +114,7 @@ void HltvAnalyzeEvent(unsigned long EventId) {
         Playoffs += strlen("nick&quot;:&quot;");
         
         char PlayerName[64];
+        memset(PlayerName, 0, 64);
         for (int i = 0; i < 64; i++) {
             if (*Playoffs == '&')
                 break;
@@ -113,6 +126,7 @@ void HltvAnalyzeEvent(unsigned long EventId) {
         Playoffs = strstr(Playoffs, "rating&quot;:&quot;");
         Playoffs += strlen("rating&quot;:&quot;");
         char RatingBfr[16];
+        memset(RatingBfr, 0, 16);
         for (int i = 0; i < 16; i++) {
             if (*Playoffs == '&')
                 break;
@@ -125,9 +139,9 @@ void HltvAnalyzeEvent(unsigned long EventId) {
         unsigned char PlayerFound = 0;
         for (int i = 0; i < EventListCnt; i++) {
             PHLTV_EVENT_PLAYER ThisPlaya = &EventList[i];
-            if (!strcmp(ThisPlaya->PlayerName, Playoffs)) {
-                ThisPlaya->MatchCount[1]++;
-                ThisPlaya->PlayerRatingSum[1] += Rating;
+            if (!strcmp(ThisPlaya->PlayerName, PlayerName)) {
+                ThisPlaya->MatchCount[0]++;
+                ThisPlaya->PlayerRatingSum[0] += Rating;
                 PlayerFound = 1;
                 break;
             }
@@ -140,8 +154,8 @@ void HltvAnalyzeEvent(unsigned long EventId) {
             PHLTV_EVENT_PLAYER ThisPlayer = &EventList[EventListCnt++];
             
             strcpy(ThisPlayer->PlayerName, PlayerName);
-            ThisPlayer->PlayerRatingSum[1] = Rating;
-            ThisPlayer->MatchCount[1] = 1;
+            ThisPlayer->PlayerRatingSum[0] = Rating;
+            ThisPlayer->MatchCount[0] = 1;
         }
     }
     

@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
     CsvInit();
     
     for (int i = 0; i < argc; i++) {
-        if (!strcmp(argv[i], "--event")) {
+        if (!strcmp(argv[i], "--events")) {
             emain();
             NetShutdown();
             CsvShutdown();

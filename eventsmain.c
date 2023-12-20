@@ -6,6 +6,7 @@
 //
 
 #include "hltv/hltv.h"
+#include "csv/csv.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -30,7 +31,72 @@ void emain(void) {
         strcpy(Events[i], InputBuffer);
     }
     
+    HltvStartEventAnalysis();
     
+    for (int i = 0; i < 128; i++)
+        HltvAnalyzeEvent(EventIDs[i]);
+    
+    int EventPlayersCount;
+    PHLTV_EVENT_PLAYER EventPlayers = HltvGetEventsPlayerList(
+        &EventPlayersCount);
+    
+    unsigned long Merchants = CsvCreateTable("merchants.csv");
+    unsigned long Header = CsvCreateEntry(Merchants, 1);
+    CsvEntryAddMember(Merchants, Header, "Player Name");
+    CsvEntryAddMember(Merchants, Header, "Matches Played");
+    CsvEntryAddMember(Merchants, Header, "Average Rating");
+    CsvEntryAddMember(Merchants, Header, "Average Playoffs Rating");
+    CsvEntryAddMember(Merchants, Header, "Average Groups Rating");
+    CsvEntryAddMember(Merchants, Header, "Playoffs Match Count");
+    CsvEntryAddMember(Merchants, Header, "Groups Match Count");
+    CsvEntryAddMember(Merchants, Header, "Absolute Change");
+    CsvEntryAddMember(Merchants, Header, "Percent Change");
+    
+    for (int i = 0; i < EventPlayersCount; i++) {
+        PHLTV_EVENT_PLAYER ThisPlayer = &EventPlayers[i];
+        char* ThisBuffer = malloc(128);
+        unsigned long ThisEntry = CsvCreateEntry(Merchants, 1 + i);
+        
+        int MatchesPlayed = ThisPlayer->MatchCount[0] + ThisPlayer->MatchCount[1];
+        float SumRating = ThisPlayer->PlayerRatingSum[0] + ThisPlayer->PlayerRatingSum[1];
+        float AverageRating = SumRating / (float)MatchesPlayed;
+        float PlayoffsRating = ThisPlayer->PlayerRatingSum[1] / ThisPlayer->MatchCount[1];
+        float GroupsRating = ThisPlayer->PlayerRatingSum[0] / ThisPlayer->MatchCount[0];
+        float AbsoluteChange = PlayoffsRating - GroupsRating;
+        float PercentChange = PlayoffsRating / GroupsRating;
+        
+        snprintf(ThisBuffer, 128, "%s", ThisPlayer->PlayerName);
+        CsvEntryAddMember(Merchants, ThisEntry, ThisBuffer);
+        
+        snprintf(ThisBuffer, 128, "%i", MatchesPlayed);
+        CsvEntryAddMember(Merchants, ThisEntry, ThisBuffer);
+        
+        snprintf(ThisBuffer, 128, "%0.2f", AverageRating);
+        CsvEntryAddMember(Merchants, ThisEntry, ThisBuffer);
+        
+        snprintf(ThisBuffer, 128, "%0.2f", PlayoffsRating);
+        CsvEntryAddMember(Merchants, ThisEntry, ThisBuffer);
+        
+        snprintf(ThisBuffer, 128, "%0.2f", GroupsRating);
+        CsvEntryAddMember(Merchants, ThisEntry, ThisBuffer);
+        
+        snprintf(ThisBuffer, 128, "%i", ThisPlayer->MatchCount[1]);
+        CsvEntryAddMember(Merchants, ThisEntry, ThisBuffer);
+        
+        snprintf(ThisBuffer, 128, "%i", ThisPlayer->MatchCount[0]);
+        CsvEntryAddMember(Merchants, ThisEntry, ThisBuffer);
+        
+        snprintf(ThisBuffer, 128, "%0.2f", AbsoluteChange);
+        CsvEntryAddMember(Merchants, ThisEntry, ThisBuffer);
+        
+        snprintf(ThisBuffer, 128, "%0.2f%%", (PercentChange - 1.0f) * 100.f);
+        CsvEntryAddMember(Merchants, ThisEntry, ThisBuffer);
+        
+        free(ThisBuffer);
+    }
+    
+    CsvGenerate(Merchants);
+    HltvDestroyEventAnalysis();
     
     for (int i = 0; i < 128; i++) {
         if (Events[i])

@@ -86,7 +86,7 @@ void HltvAnalyzeEvent(unsigned long EventId) {
         for (int i = 0; i < EventListCnt; i++) {
             PHLTV_EVENT_PLAYER ThisPlaya = &EventList[i];
             if (strstr(ThisPlaya->PlayerName, PlayerName)) {
-                ThisPlaya->MatchCount[1]++;
+                ThisPlaya->MatchCount[1] += 1;
                 ThisPlaya->PlayerRatingSum[1] += Rating;
                 PlayerFound = 1;
                 break;

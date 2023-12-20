@@ -95,20 +95,73 @@ void HltvAnalyzeEvent(unsigned long EventId) {
     }
     
     // Calculate for groups
+    while (1) {
+        Playoffs = strstr(Playoffs, "nick&quot;:&quot;");
+        if (!Playoffs)
+            break;
+        Playoffs += strlen("nick&quot;:&quot;");
+        
+        char PlayerName[64];
+        for (int i = 0; i < 64; i++) {
+            if (*Playoffs == '&')
+                break;
+            
+            PlayerName[i] = *Playoffs;
+            Playoffs++;
+        }
+        
+        Playoffs = strstr(Playoffs, "rating&quot;:&quot;");
+        Playoffs += strlen("rating&quot;:&quot;");
+        char RatingBfr[16];
+        for (int i = 0; i < 16; i++) {
+            if (*Playoffs == '&')
+                break;
+            
+            RatingBfr[i] = *Playoffs;
+            Playoffs++;
+        }
+        float Rating = atof(RatingBfr);
+        
+        unsigned char PlayerFound = 0;
+        for (int i = 0; i < EventListCnt; i++) {
+            PHLTV_EVENT_PLAYER ThisPlaya = &EventList[i];
+            if (!strcmp(ThisPlaya->PlayerName, Playoffs)) {
+                ThisPlaya->MatchCount[1]++;
+                ThisPlaya->PlayerRatingSum[1] += Rating;
+                PlayerFound = 1;
+                break;
+            }
+        }
+        
+        if (!PlayerFound) {
+            EventList = realloc(EventList,
+                sizeof(HLTV_EVENT_PLAYER) * (EventListCnt + 1));
+            memset(&EventList[EventListCnt], 0, sizeof(HLTV_EVENT_PLAYER));
+            PHLTV_EVENT_PLAYER ThisPlayer = &EventList[EventListCnt++];
+            
+            strcpy(ThisPlayer->PlayerName, PlayerName);
+            ThisPlayer->PlayerRatingSum[1] = Rating;
+            ThisPlayer->MatchCount[1] = 1;
+        }
+    }
     
+    free(EventBuffer);
+    return;
 }
 
 PHLTV_EVENT_PLAYER HltvGetEventsPlayerList(int* PlayerCount) {
     if (!InEvent)
         return NULL;
     
-    return NULL;
+    *PlayerCount = EventListCnt;
+    return EventList;
 }
 
 void HltvDestroyEventAnalysis(void) {
     if (!InEvent)
         return;
     
+    free(EventList);
     InEvent = 0;
     return;
 }

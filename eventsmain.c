@@ -5,4 +5,8 @@
 //  Created by Noah Wooten on 12/20/23.
 //
 
-#include <stdio.h>
+#include "hltv/hltv.h"
+
+void emain(void) {
+    
+}

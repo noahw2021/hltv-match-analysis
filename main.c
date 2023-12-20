@@ -13,13 +13,25 @@
 #include "net/netapi.h"
 #include "csv/csv.h"
 
+void emain(void);
+
 int main(int argc, char** argv) {
     NetInit();
     CsvInit();
     
+    for (int i = 0; i < argc; i++) {
+        if (!strcmp(argv[i], "--event")) {
+            emain();
+            NetShutdown();
+            CsvShutdown();
+            return 0;
+        }
+    }
+    
     int PlayerCount = 0;
     char* InputBuffer = malloc(128);
     char** Players = malloc(sizeof(char*) * 128);
+    memset(Players, 0, sizeof(char*) * 128);
     unsigned long* PlayerIds = malloc(sizeof(unsigned long) * 128);
     printf("Please enter player names, and ':q' to stop.\n");
     
@@ -150,6 +162,12 @@ int main(int argc, char** argv) {
     }
     
     CsvGenerate(PlayerTable);
+    
+    for (int i = 0; i < 128; i++) {
+        if (Players[i])
+            free(Players[i]);
+    }
+    free(Players);
     
     NetShutdown();
     CsvShutdown();

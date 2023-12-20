@@ -42,6 +42,7 @@ int main(int argc, char** argv) {
         if (strstr(Players[i], "\n"))
             strstr(Players[i], "\n")[0] = 0x00;
         PHLTV_SEARCH_LIST SearchList = HltvSearchPlayer(Players[i]);
+        usleep(1000000 + (rand() % 100000));
         if (SearchList->EntryCount == 0) {
             printf("No player with name '%s' found.\n", Players[i]);
             for (int j = 0; j < PlayerCount; j++)
@@ -57,19 +58,19 @@ int main(int argc, char** argv) {
             PlayerIds[i] = SearchList->Entries[0].PlayerId;
             strcpy(Players[i], SearchList->Entries[0].PlayerName);
             HltvDestroySearch(SearchList);
+            printf("Found player: %s\n", Players[i]);
         } else {
             printf("%lu players with name '%s' were found, please select one: \n", SearchList->EntryCount, Players[i]);
-            for (int i = 0; i < SearchList->EntryCount; i++)
-                printf("%i. %s of %s\n", i + 1, SearchList->Entries[i].PlayerName,
-                    SearchList->Entries[i].Country);
+            for (int j = 0; j < SearchList->EntryCount; j++)
+                printf("%i. %s of %s\n", j + 1, SearchList->Entries[j].PlayerName,
+                    SearchList->Entries[j].Country);
             printf("\nPlayer: ");
             int Selector;
             scanf("%i", &Selector);
             PlayerIds[i] = SearchList->Entries[Selector - 1].PlayerId;
             strcpy(Players[i], SearchList->Entries[Selector - 1].PlayerName);
             HltvDestroySearch(SearchList);
-            
-            usleep(100000);
+            usleep(rand() % 100000);
         }
     }
     

@@ -95,4 +95,17 @@ PHLTV_MATCH_LIST HltvGenerateMatchList(unsigned long PlayerId,
 
 void HltvDestroyMatchList(PHLTV_MATCH_LIST MatchList);
 
+typedef struct _HLTV_EVENT_PLAYER {
+    char PlayerName[64];
+    
+    // 0 = groups, 1 = playoffs!
+    float PlayerRatingSum[2];
+    int MatchCount[2];
+}HLTV_EVENT_PLAYER, *PHLTV_EVENT_PLAYER;
+
+void HltvStartEventAnalysis(void);
+void HltvAnalyzeEvent(unsigned long EventId);
+PHLTV_EVENT_PLAYER HltvGetEventsPlayerList(int* PlayerCount);
+void HltvDestroyEventAnalysis(void);
+
 #endif /* hltv_h */

@@ -168,6 +168,10 @@ int main(int argc, char** argv) {
             free(Players[i]);
     }
     free(Players);
+    free(PlayerIds);
+    
+    if (Playalist != stdin)
+        fclose(Playalist);
     
     NetShutdown();
     CsvShutdown();
